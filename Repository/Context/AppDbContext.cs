@@ -21,5 +21,6 @@ public sealed class AppDbContext: IdentityDbContext<AppUser,AppRole,string>
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<AppUser>().ToTable("Users");
+        modelBuilder.Entity<AppRole>().ToTable("Roles");
     }
 }
