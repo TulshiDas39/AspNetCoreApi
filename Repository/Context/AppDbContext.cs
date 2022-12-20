@@ -1,6 +1,7 @@
 ﻿using AspNetCoreApi.Core.Models;
 using Core.Interfaces;
 using Core.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,4 +16,10 @@ public sealed class AppDbContext: IdentityDbContext<AppUser,AppRole,string>
     }
 
     public DbSet<Cow> Cows { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<AppUser>().ToTable("Users");
+    }
 }
