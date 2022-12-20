@@ -27,6 +27,11 @@ public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey> wher
         return (await All().Where(x => x.Id.Equals(id)).FirstOrDefaultAsync())!;
     }
 
+    public async Task<int> CountAsync()
+    {
+        return await All().CountAsync();
+    }
+
     public void AddToContext(TEntity entity)
     {
         _context.Add(entity);

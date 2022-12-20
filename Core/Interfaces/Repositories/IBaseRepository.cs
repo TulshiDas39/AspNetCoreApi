@@ -6,6 +6,7 @@ public interface IBaseRepository<TEntity, TKey> where TEntity : BaseModel<TKey>
 {
     Task<List<TEntity>> GetAll();
     public Task<TEntity> GetById(TKey id);
+    public Task<int> CountAsync();
     void AddToContext(TEntity entity);
     bool Add(TEntity entity);
     void AddListToContext(IEnumerable<TEntity> entities);

@@ -9,12 +9,11 @@
   <ItemGroup>
     <Folder Include="Interfaces\Common\" />
     <Folder Include="Models\" />
-    <Folder Include="Dtos\" />
     <Folder Include="Middlewares\" />
     <Folder Include="Enums\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Types\" />
+    <Folder Include="Types\Requests\" />
   </ItemGroup>
 
   <ItemGroup>

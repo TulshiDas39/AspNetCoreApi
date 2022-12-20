@@ -1,4 +1,5 @@
 ﻿using AspNetCoreApi.Core.Dtos;
+using AspNetCoreApi.Core.Exceptions;
 using AspNetCoreApi.Core.Interfaces.Repositories;
 using AspNetCoreApi.Core.Interfaces.Services;
 using AutoMapper;
@@ -9,7 +10,7 @@ namespace AspNetCoreApi.Services;
 public class BaseService<TEntity, TDto, TKey> : IBaseService<TDto,TKey> where TEntity : BaseModel<TKey> where TDto : BaseDto<TKey> 
 {
     private readonly IBaseRepository<TEntity, TKey> _repo;
-    private readonly IMapper _mapper;
+    protected readonly IMapper _mapper;
 
     public BaseService(IBaseRepository<TEntity, TKey> repo, IMapper mapper)
     {
@@ -41,9 +42,12 @@ public class BaseService<TEntity, TDto, TKey> : IBaseService<TDto,TKey> where TE
         throw new NotImplementedException();
     }
 
-    public Task Delete(TKey Id)
+    public async Task Delete(TKey Id)
     {
-        throw new NotImplementedException();
+        var entity = await _repo.GetById(Id);
+        if (entity is null)
+            throw new CustomException("Entity not found");
+        await _repo.DeleteAsync(entity);
     }
 
     public Task ParmanentDelete(TKey Id)

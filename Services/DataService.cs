@@ -2,6 +2,7 @@
 using AspNetCoreApi.Core.Interfaces.Services;
 using AspNetCoreApi.Core.Models;
 using AspNetCoreApi.Core.Extensions;
+using AspNetCoreApi.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +12,13 @@ public class DataService:IDataService
 {
     private readonly RoleManager<AppRole> _role;
     private readonly UserManager<AppUser> _user;
+    private readonly IBookRepository _book;
 
-    public DataService(RoleManager<AppRole> role, UserManager<AppUser> user)
+    public DataService(RoleManager<AppRole> role, UserManager<AppUser> user, IBookRepository book)
     {
         _role = role;
         _user = user;
+        _book = book;
     }
 
     public async Task<bool> SeedData()
@@ -28,7 +31,34 @@ public class DataService:IDataService
         var isUserSeedSuccess = await SeedUser();
         if (!isUserSeedSuccess) isSuccess = false;
 
+        var isBookSeedSuccess = await SeedBook();
+        if (!isBookSeedSuccess) isSuccess = false;
+
         return isSuccess;
+    }
+    private async Task<bool> SeedBook()
+    {
+        var bookCount = await _book.CountAsync();
+        if(bookCount > 0) return true;
+
+        var book = new Book()
+        {
+            Name = "Teach yourself c",
+            Author = "Herbert Schildt",
+            EditionNo = 1,
+        };
+
+        try
+        {
+            await _book.AddAsync(book);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
+
+        return true;
     }
 
     private async Task<bool> SeedUser()
