@@ -7,10 +7,22 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var pathBuilt = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Logs");
+var filePath = pathBuilt + $"\\log{DateTime.UtcNow.ToString("yyyy-MM-dd")}.txt";
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File(filePath)
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
+    .CreateLogger();
+
+Log.Information("Application starting...");
+
 builder.LoadData();
 builder.Services.AddControllers().AddNewtonsoftJson(o =>
 {
@@ -71,5 +83,6 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
-
+Log.Warning("Application started...");
 app.Run();
+

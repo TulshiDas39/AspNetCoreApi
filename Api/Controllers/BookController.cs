@@ -4,6 +4,7 @@ using AspNetCoreApi.Core.Types;
 using AspNetCoreApi.Core.Types.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace AspNetCoreApi.Web.Controllers;
 
@@ -23,7 +24,10 @@ public class BookController:ApiController
     [HttpGet("all")]
     public async Task<ActionResult<ApiResult<List<BookDto>>>> GetAll()
     {
+        Log.Information("Getting books");
+
         var books = await _book.GetAll();
+        Log.Information($"Total books:{books.Count}");
         return OkResult(books);
     }
 
